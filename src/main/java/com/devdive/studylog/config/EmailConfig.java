@@ -19,16 +19,16 @@ public class EmailConfig {
         );
         return message;
     }
-
-    @Bean
-    public SimpleMailMessage singInTemplateSimpleMessage() {
-        SimpleMailMessage message = new SimpleMailMessage();
-        message.setFrom(FROM_EMAIL);
-        message.setSubject("StudyLog 로그인");
-        message.setText(
-                "StudyLog 로그인을 위해 다음 링크를 클릭해주세요\n%s\n"
-        );
-        return message;
-    }
+//
+//    @Bean
+//    public SimpleMailMessage singInTemplateSimpleMessage() {
+//        SimpleMailMessage message = new SimpleMailMessage();
+//        message.setFrom(FROM_EMAIL);
+//        message.setSubject("StudyLog 로그인");
+//        message.setText(
+//                "StudyLog 로그인을 위해 다음 링크를 클릭해주세요\n%s\n"
+//        );
+//        return message;
+//    }
 
 }

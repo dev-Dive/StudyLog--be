@@ -2,27 +2,21 @@ package com.devdive.studylog.service;
 
 import com.devdive.studylog.repository.MemberRepository;
 import com.devdive.studylog.repository.TokenRepository;
-import jakarta.mail.Message;
-import jakarta.mail.MessagingException;
-import jakarta.mail.internet.InternetAddress;
-import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
-import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.scheduling.annotation.Async;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class EmailService {
 
-    private final JavaMailSender mailSender;
     private final MemberRepository memberRepository;
     private final TokenRepository tokenRepository;
-    private final SimpleMailMessage templateMailMessage;
+    private final EmailSender emailSender;
 
-    public void sendEmail(String email) {
-
+    public void sendAuthEmail(String email) {
+        log.info(Thread.currentThread().getName());
         if (memberRepository.existsByEmail(email)) {
             // 로그인
 
@@ -34,16 +28,11 @@ public class EmailService {
         String token = tokenRepository.createAndSave(email);
 
         // email 내용 만들기
+        String message = "";
 
-                // email 전송
-        sendEmail(email, "");
+        // email 전송
+        emailSender.sendEmail(email, message);
     }
 
-    public void sendEmail(String to, String message) {
-        SimpleMailMessage mailMessage = new SimpleMailMessage(templateMailMessage);
-        mailMessage.setTo(to);
-        mailMessage.setText(message);
-        mailSender.send(mailMessage);
 
-    }
 }

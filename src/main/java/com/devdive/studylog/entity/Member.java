@@ -1,9 +1,11 @@
 package com.devdive.studylog.entity;
 
 import jakarta.persistence.*;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "members")
+@NoArgsConstructor
 public class Member {
 
     @Id
@@ -16,8 +18,12 @@ public class Member {
     @Column
     private String email;
 
-    public Member(String nickname, String email) {
+    @Column(unique = true)
+    private Integer uniqueNumber;
+
+    public Member(String nickname, String email, Integer uniqueNumber) {
         this.nickname = nickname;
         this.email = email;
+        this.uniqueNumber = uniqueNumber;
     }
 }

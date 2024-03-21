@@ -18,11 +18,11 @@ public class SimpleTokenRepository implements TokenRepository {
 
     @Override
     public boolean containsToken(String token) {
-        return false;
+        return true;
     }
 
     @Override
     public boolean deleteByToken(String token) {
-        return false;
+        return true;
     }
 }
