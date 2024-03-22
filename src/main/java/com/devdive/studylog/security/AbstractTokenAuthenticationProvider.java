@@ -22,10 +22,10 @@ public abstract class AbstractTokenAuthenticationProvider implements Authenticat
             throw new BadCredentialsException("Invalid Token");
         }
 
-//        String email = tokenRepository.findEmailByToken(token)
-//                        .orElseThrow(() -> new BadCredentialsException("Invalid Token"));
+        String email = tokenRepository.findEmailByToken(token)
+                        .orElseThrow(() -> new BadCredentialsException("Invalid Token"));
         tokenRepository.deleteByToken(token);
-        TokenAuthenticationToken successToken = new TokenAuthenticationToken("email", null);
+        TokenAuthenticationToken successToken = new TokenAuthenticationToken(email, null);
         successToken.setAuthenticated(true);
         return successToken;
     }

@@ -35,6 +35,9 @@ public class WebSecurityConfig {
 
                 // filter 설정
                 .addFilterBefore(tokenAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+                .authorizeHttpRequests(auth ->
+                        auth.anyRequest().permitAll()
+                )
 
                 // 인가 설정
 //                .authorizeHttpRequests(authorize ->

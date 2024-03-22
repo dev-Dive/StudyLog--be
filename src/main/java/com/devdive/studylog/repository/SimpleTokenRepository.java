@@ -1,19 +1,21 @@
 package com.devdive.studylog.repository;
 
+import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
+@Primary
 @Repository
 public class SimpleTokenRepository implements TokenRepository {
     @Override
     public String createAndSave(String email) {
-        return null;
+        return "";
     }
 
     @Override
     public Optional<String> findEmailByToken(String token) {
-        return Optional.empty();
+        return Optional.of("");
     }
 
     @Override

@@ -7,6 +7,8 @@ import com.devdive.studylog.security.JwtProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.NoSuchElementException;
+
 @Service
 @RequiredArgsConstructor
 public class AuthService {
@@ -15,23 +17,33 @@ public class AuthService {
     private final MemberRepository memberRepository;
     private final JwtProvider jwtProvider;
     private final UniqueNumberGenerator uniqueNumberGenerator;
+    private final EmailService emailService;
 
     public String signUp(String token, String nickname) {
-        // 사전조건
-        // 1. 토큰이 유효한지 확인
-        // 2. 이미 등록된 이메일인지 확인
         String email = tokenRepository.findEmailByToken(token)
-                .orElseThrow(RuntimeException::new);
+                .orElseThrow(NoSuchElementException::new);
         if (memberRepository.existsByEmail(email)) {
-            throw new RuntimeException();
+            throw new NoSuchElementException();
         }
 
-        // 유니크넘버 생성
         Integer uniqueNumber = uniqueNumberGenerator.generate();
 
-        // 회원가입
         Member member = new Member(nickname, email, uniqueNumber);
         memberRepository.save(member);
         return jwtProvider.createToken(email);
+    }
+
+    public void sendEmailForAuthentication(String email) {
+        if (memberRepository.existsByEmail(email)) {
+            String token = tokenRepository.createAndSave(email);
+            String subject = EmailMessage.SIGN_IN.getSubject();
+            String message = EmailMessage.SIGN_UP.getMessage(token);
+            emailService.sendEmail(email, subject, message);
+        } else {
+            String token = tokenRepository.createAndSave(email);
+            String subject = EmailMessage.SIGN_UP.getSubject();
+            String message = EmailMessage.SIGN_UP.getMessage(token);
+            emailService.sendEmail(email, subject, message);
+        }
     }
 }
