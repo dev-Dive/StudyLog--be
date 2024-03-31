@@ -1,8 +1,8 @@
-package com.devdive.studylog.repository;
+package com.devdive.studylog.security;
 
 import java.util.Optional;
 
-public interface TokenRepository {
+interface TokenRepository {
     /**
      * 이미 등록된 email을 받았을 경우
      * 1) 기존의 token을 삭제하고 재발급

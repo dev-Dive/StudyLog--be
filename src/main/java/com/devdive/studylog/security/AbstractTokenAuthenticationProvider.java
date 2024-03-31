@@ -1,12 +1,11 @@
 package com.devdive.studylog.security;
 
-import com.devdive.studylog.repository.TokenRepository;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 
-public abstract class AbstractTokenAuthenticationProvider implements AuthenticationProvider {
+abstract class AbstractTokenAuthenticationProvider implements AuthenticationProvider {
 
     protected final TokenRepository tokenRepository;
 

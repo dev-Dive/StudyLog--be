@@ -9,3 +9,6 @@ package com.devdive.studylog.service;
 public interface UniqueNumberGenerator {
     Integer generate();
 }
+
+// 1. 사용자 검색에 사용됨
+// 2.

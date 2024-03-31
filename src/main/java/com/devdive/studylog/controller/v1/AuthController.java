@@ -3,10 +3,12 @@ package com.devdive.studylog.controller.v1;
 import com.devdive.studylog.controller.v1.request.EmailSignUpRequest;
 import com.devdive.studylog.controller.v1.request.SendEmailRequest;
 import com.devdive.studylog.controller.v1.response.SignInResponse;
+import com.devdive.studylog.security.TokenAuthenticationToken;
 import com.devdive.studylog.service.AuthService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,10 +28,12 @@ public class AuthController {
     }
 
     @PostMapping("/email/signup")
-    public ResponseEntity<SignInResponse> signup(@RequestBody @Valid EmailSignUpRequest request) {
-        String accessToken = authService.signUp(request.token(), request.nickname());
-        return ResponseEntity.ok()
-                .body(new SignInResponse(accessToken));
+    public ResponseEntity<SignInResponse> signup(
+            @RequestBody @Valid EmailSignUpRequest request,
+            @AuthenticationPrincipal TokenAuthenticationToken authentication
+    ) {
+        authService.signUp(request.nickname(), (String) authentication.getPrincipal());
+        return ResponseEntity.ok().build();
     }
 
 }

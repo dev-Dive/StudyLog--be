@@ -1,10 +1,6 @@
-package com.devdive.studylog.config;
+package com.devdive.studylog.security;
 
-import com.devdive.studylog.repository.TokenRepository;
-import com.devdive.studylog.security.JwtProvider;
-import com.devdive.studylog.security.TokenAuthenticationFilter;
-import com.devdive.studylog.security.TokenAuthenticationProvider;
-import com.devdive.studylog.security.TokenAuthenticationSuccessHandler;
+import com.devdive.studylog.service.TokenProvider;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -13,6 +9,8 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.oauth2.jwt.JwtDecoder;
+import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
@@ -35,8 +33,8 @@ public class WebSecurityConfig {
 
                 // filter 설정
                 .addFilterBefore(tokenAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
-                .authorizeHttpRequests(auth ->
-                        auth.anyRequest().permitAll()
+                .authorizeHttpRequests(auth -> auth
+                        .anyRequest().permitAll()
                 )
 
                 // 인가 설정
@@ -60,14 +58,26 @@ public class WebSecurityConfig {
             JwtProvider jwtProvider,
             AuthenticationManager authenticationManager
     ) {
-        TokenAuthenticationFilter filter = new TokenAuthenticationFilter("/api/v1/auth/email/signin", authenticationManager);
+        TokenAuthenticationFilter filter = new TokenAuthenticationFilter("/api/v1/auth/email/sign*", authenticationManager);
         filter.setAuthenticationSuccessHandler(new TokenAuthenticationSuccessHandler(jwtProvider));
         return filter;
     }
 
     @Bean
-    public AuthenticationManager authenticationManager(TokenRepository tokenRepository)  {
+    public AuthenticationManager authenticationManager(TokenRepository tokenRepository) {
         return new ProviderManager(new TokenAuthenticationProvider(tokenRepository));
+    }
+
+    @Bean
+    public TokenRepository tokenRepository() {
+        return new InMemoryTokenRepository(new TokenProvider());
+    }
+
+    @Bean
+    public JwtDecoder jwtDecoder() {
+        return NimbusJwtDecoder.withIssuerLocation()
+                .jwsAlgorithm()
+                .build();
     }
 
 }

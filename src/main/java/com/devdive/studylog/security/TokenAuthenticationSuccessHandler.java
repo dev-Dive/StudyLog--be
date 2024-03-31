@@ -13,16 +13,19 @@ import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 
-public class TokenAuthenticationSuccessHandler implements AuthenticationSuccessHandler {
+class TokenAuthenticationSuccessHandler implements AuthenticationSuccessHandler {
 
     private final JwtProvider jwtProvider;
+    private final TokenRepository tokenRepository;
 
-    public TokenAuthenticationSuccessHandler(JwtProvider jwtProvider) {
+    public TokenAuthenticationSuccessHandler(JwtProvider jwtProvider, TokenRepository tokenRepository) {
         this.jwtProvider = jwtProvider;
+        this.tokenRepository = tokenRepository;
     }
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
+        tokenRepository.deleteByToken((String) authentication.getPrincipal());
         String accessToken = jwtProvider.createToken((String) authentication.getPrincipal());
         setAccessToken(response, accessToken);
     }

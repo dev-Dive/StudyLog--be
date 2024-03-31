@@ -18,7 +18,7 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import java.io.IOException;
 
 @Slf4j
-public class TokenAuthenticationFilter extends AbstractAuthenticationProcessingFilter {
+class TokenAuthenticationFilter extends AbstractAuthenticationProcessingFilter {
 
     public TokenAuthenticationFilter(String url, AuthenticationManager authenticationManager) {
         super(new AntPathRequestMatcher(url, HttpMethod.POST.name()), authenticationManager);

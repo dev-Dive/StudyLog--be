@@ -1,17 +1,15 @@
-package com.devdive.studylog.repository;
+package com.devdive.studylog.security;
 
 import com.devdive.studylog.service.TokenProvider;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
-@Repository
 @RequiredArgsConstructor
-public class InMemoryTokenRepository implements TokenRepository {
+class InMemoryTokenRepository implements TokenRepository {
 
     private final Map<String, String> map = new ConcurrentHashMap<>();
     private final TokenProvider tokenProvider;

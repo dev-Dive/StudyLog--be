@@ -9,12 +9,12 @@ public enum EmailMessage {
     SIGN_UP(
             "회원가입",
             "스터디로그 회원가입",
-            "http://studylog.com?type=signup&token=%s"
+            "http://studylog.com/signup?token=%s"
             ),
     SIGN_IN(
             "로그인",
             "스터디로그 로그인",
-            "http://studylog.com?type=signin&token=%s"
+            "http://studylog.com/signin?token=%s"
             );
 
     private final String type;
@@ -32,7 +32,7 @@ public enum EmailMessage {
         String link = String.format(this.link, token);
         return STR
                 ."""
-                    StudyLog \{this.type}을(를) 위해 다음 링크를 클릭해주세요.
+                    StudyLogc \{this.type}을(를) 위해 다음 링크를 클릭해주세요.
                     \{link}
                 """;
     }

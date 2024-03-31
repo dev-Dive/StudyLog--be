@@ -1,13 +1,11 @@
 package com.devdive.studylog.service;
 
-import org.springframework.stereotype.Component;
-
 import java.nio.ByteBuffer;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.time.LocalDateTime;
 
-@Component
+
 public class TokenProvider {
 
     public String generate(String value, LocalDateTime now) {

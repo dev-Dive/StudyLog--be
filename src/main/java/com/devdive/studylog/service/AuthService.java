@@ -2,12 +2,9 @@ package com.devdive.studylog.service;
 
 import com.devdive.studylog.entity.Member;
 import com.devdive.studylog.repository.MemberRepository;
-import com.devdive.studylog.repository.TokenRepository;
-import com.devdive.studylog.security.JwtProvider;
+import com.devdive.studylog.security.TokenRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
-import java.util.NoSuchElementException;
 
 @Service
 @RequiredArgsConstructor
@@ -15,24 +12,22 @@ public class AuthService {
 
     private final TokenRepository tokenRepository;
     private final MemberRepository memberRepository;
-    private final JwtProvider jwtProvider;
     private final UniqueNumberGenerator uniqueNumberGenerator;
     private final EmailService emailService;
 
-    public String signUp(String token, String nickname) {
-        String email = tokenRepository.findEmailByToken(token)
-                .orElseThrow(NoSuchElementException::new);
+    public void signUp(String nickname, String email) {
         if (memberRepository.existsByEmail(email)) {
-            throw new NoSuchElementException();
+            throw new RuntimeException();
         }
 
         Integer uniqueNumber = uniqueNumberGenerator.generate();
 
         Member member = new Member(nickname, email, uniqueNumber);
         memberRepository.save(member);
-        return jwtProvider.createToken(email);
     }
 
+    // Todo: 인증 토큰 생성은 비즈니스 레이어의 책임일까? 웹 레이어의 책임일까?
+    // 애초에 인증 메일의 내용 자체가 웹(인증) 레이어의 책임 아닐까?
     public void sendEmailForAuthentication(String email) {
         if (memberRepository.existsByEmail(email)) {
             String token = tokenRepository.createAndSave(email);
